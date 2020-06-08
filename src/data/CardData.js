@@ -1,0 +1,48 @@
+const CardData = [
+  [
+    "react",
+    "vue",
+    "angular",
+    "javascript",
+    "redux",
+    "mobx",
+    "mst",
+    "graphql",
+    "react",
+    "vue",
+    "angular",
+    "javascript",
+    "redux",
+    "mobx",
+    "mst",
+    "graphql"
+  ],
+  [
+    "react",
+    "vue",
+    "angular",
+    "javascript",
+    "redux",
+    "mobx",
+    "mst",
+    "graphql",
+    "react",
+    "vue",
+    "angular",
+    "javascript",
+    "redux",
+    "mobx",
+    "mst",
+    "graphql",
+    "react",
+    "vue",
+    "angular",
+    "javascript",
+    "redux",
+    "mobx",
+    "mst",
+    "graphql"
+  ]
+];
+
+export default CardData;
