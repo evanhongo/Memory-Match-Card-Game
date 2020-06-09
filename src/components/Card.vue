@@ -1,8 +1,8 @@
 <template>
   <div :class="isFlipped" v-on:click="handleClick">
     <transition name="flip">
-      <div class="card" :style="symbolStyle" v-if="flipped" />
-      <div :id="id" class="card" :style="backStyle" v-else />
+      <div class="card" :class="[symbolClass]" v-if="flipped" />
+      <div :id="id" class="card back" v-else />
     </transition>
   </div>
 </template>
@@ -16,17 +16,14 @@ export default {
     const isFlipped = computed(() => {
       return { flipped: props.flipped };
     });
-    const symbolImg = require(`../img/${props.symbol}.png`);
-    const backImg = require("../img/cat.jpg");
-    const symbolStyle = computed(() => {
-      return { backgroundImage: `url(${symbolImg})` };
+
+    const symbolClass = computed(() => {
+      return props.symbol;
     });
-    const backStyle = { backgroundImage: `url(${backImg})` };
 
     return {
       isFlipped,
-      symbolStyle,
-      backStyle
+      symbolClass
     };
   }
 };
@@ -62,5 +59,41 @@ export default {
   height: 100px;
   cursor: pointer;
   background-size: cover;
+}
+
+.back {
+  background-image: url(../img/cat.jpg);
+}
+
+.react {
+  background-image: url(../img/react.png);
+}
+
+.vue {
+  background-image: url(../img/vue.png);
+}
+
+.angular {
+  background-image: url(../img/angular.png);
+}
+
+.javascript {
+  background-image: url(../img/javascript.png);
+}
+
+.redux {
+  background-image: url(../img/redux.png);
+}
+
+.mobx {
+  background-image: url(../img/mobx.png);
+}
+
+.mst {
+  background-image: url(../img/mst.png);
+}
+
+.graphql {
+  background-image: url(../img/graphql.png);
 }
 </style>

@@ -17,8 +17,19 @@
 <script>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import Card from "./Card";
+import CardData from "../data/CardData";
 import formatTime from "../utils/formatTime";
 import lodash from "lodash";
+
+function useCards(data) {
+  const cards = ref(data);
+
+  function setCards(data) {
+    cards.value = data;
+  }
+
+  return { cards, setCards };
+}
 
 function useQueue() {
   const queue = ref([]);
@@ -76,17 +87,34 @@ function useShuffle(cards, setCards) {
 }
 
 export default {
-  name: "MemoryGame",
-  props: ["config", "gameOver", "cards", "setCards"],
+  name: "GameBoard",
+  props: ["config", "gameOver"],
   setup(props) {
-    const cards = computed(() => props.cards);
+    function prepareCardData() {
+      const tmp = props.config.level === "normal" ? CardData[0] : CardData[1];
+
+      for (let i = 1; i < tmp.length; i++) {
+        const random = Math.floor(Math.random() * (i + 1));
+        [tmp[i], tmp[random]] = [tmp[random], tmp[i]];
+      }
+
+      return tmp.map((symbol, index) => {
+        return {
+          id: index,
+          symbol: symbol,
+          flipped: false
+        };
+      });
+    }
+
+    const { cards, setCards } = useCards(prepareCardData());
     const { queue, setQueue } = useQueue();
     const { score, incrementScore } = useScore();
     const formatedSecondElapsed = computed(() =>
       formatTime(secondElapsed.value)
     );
     const { secondElapsed } = useTimer();
-    useShuffle(cards, props.setCards);
+    useShuffle(cards, setCards);
 
     const boardClass = computed(() => {
       return {
@@ -105,7 +133,7 @@ export default {
     function handleClick(e) {
       const id = Number(e.target.id);
       setQueue([...queue.value, id]);
-      props.setCards(
+      setCards(
         cards.value.map(card => {
           if (card.id === id) card.flipped = true;
           return card;
@@ -128,7 +156,7 @@ export default {
         } else {
           setQueue([]);
           setTimeout(() => {
-            props.setCards(
+            setCards(
               cards.value.map(card => {
                 nQ.forEach(id => {
                   if (card.id === Number(id)) card.flipped = false;
@@ -154,6 +182,7 @@ export default {
     });
 
     return {
+      cards,
       formatedSecondElapsed,
       boardClass,
       timerClass,

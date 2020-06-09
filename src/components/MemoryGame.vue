@@ -15,34 +15,17 @@
           Hard
         </button>
       </div>
-      <GameBoard
-        :config="config"
-        :gameOver="gameOver"
-        :cards="cards"
-        :setCards="setCards"
-        v-else
-      />
+      <GameBoard :config="config" :gameOver="gameOver" v-else />
     </transition>
   </div>
 </template>
 
 <script>
-import { reactive, ref, computed } from "vue";
+import { reactive, computed } from "vue";
 import GameBoard from "./GameBoard";
 import formatTime from "../utils/formatTime";
-import CardData from "../data/CardData";
 
-function useCards() {
-  const cards = ref([]);
-
-  function setCards(data) {
-    cards.value = data;
-  }
-
-  return { cards, setCards };
-}
-
-function useConfig(setCards) {
+function useConfig() {
   const config = reactive({
     isStart: false,
     level: "normal",
@@ -52,23 +35,6 @@ function useConfig(setCards) {
   });
 
   async function startGame({ level, matchNumber }) {
-    const tmp = level === "normal" ? CardData[0] : CardData[1];
-
-    for (let i = 1; i < tmp.length; i++) {
-      const random = Math.floor(Math.random() * (i + 1));
-      [tmp[i], tmp[random]] = [tmp[random], tmp[i]];
-    }
-
-    await setCards(
-      tmp.map((symbol, index) => {
-        return {
-          id: index,
-          symbol: symbol,
-          flipped: false
-        };
-      })
-    );
-
     config.isStart = true;
     config.level = level;
     config.matchNumber = matchNumber;
@@ -89,8 +55,7 @@ function useConfig(setCards) {
 export default {
   name: "MemoryGame",
   setup() {
-    const { cards, setCards } = useCards();
-    const { config, startGame, gameOver } = useConfig(setCards);
+    const { config, startGame, gameOver } = useConfig();
     const formatedLowestTime = computed(() =>
       config.lowestTime !== 10000 ? formatTime(config.lowestTime) : "--:--"
     );
@@ -108,9 +73,7 @@ export default {
       formatedLowestTime,
       startNormalGame,
       startHardGame,
-      gameOver,
-      cards,
-      setCards
+      gameOver
     };
   },
   components: {
